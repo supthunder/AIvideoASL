@@ -1,0 +1,28 @@
+{
+  "_comment": "Top ~300 frequency-ordered English content words for coverage measurement. Function words (a, the, is, are, etc.) are intentionally excluded because ASL drops them. Used by scripts/coverage.mjs to compute D8.",
+  "words": [
+    "I", "ME", "MY", "YOU", "YOUR", "WE", "OUR", "HE", "HIS", "SHE", "HER", "THEY", "THEIR", "IT",
+    "THIS", "THAT", "THESE", "THOSE", "WHO", "WHAT", "WHERE", "WHEN", "WHY", "HOW", "WHICH",
+    "YES", "NO", "NOT", "MAYBE", "MORE", "LESS", "MOST", "LEAST", "MANY", "FEW", "SOME", "ALL", "NONE", "EVERY", "EACH",
+    "GOOD", "BAD", "BIG", "SMALL", "NEW", "OLD", "YOUNG", "FAST", "SLOW", "HOT", "COLD", "WARM", "EASY", "HARD", "HAPPY", "SAD", "ANGRY", "TIRED", "SICK", "WELL", "STRONG", "WEAK", "RIGHT", "WRONG", "TRUE", "FALSE", "REAL", "OPEN", "CLOSE",
+    "TIME", "DAY", "NIGHT", "MORNING", "AFTERNOON", "EVENING", "WEEK", "MONTH", "YEAR", "TODAY", "TOMORROW", "YESTERDAY", "NOW", "LATER", "SOON", "ALWAYS", "NEVER", "OFTEN", "SOMETIMES", "AGAIN", "ONCE", "TWICE",
+    "GO", "COME", "STAY", "LEAVE", "ARRIVE", "RETURN", "MOVE", "STOP", "START", "FINISH", "BEGIN", "END", "WAIT", "WALK", "RUN", "DRIVE", "FLY", "SWIM", "JUMP", "SIT", "STAND", "FALL", "RISE",
+    "EAT", "DRINK", "SLEEP", "WAKE", "REST", "PLAY", "WORK", "STUDY", "READ", "WRITE", "LEARN", "TEACH", "KNOW", "UNDERSTAND", "FORGET", "REMEMBER",
+    "SEE", "LOOK", "WATCH", "HEAR", "LISTEN", "SAY", "TELL", "ASK", "ANSWER", "SPEAK", "TALK", "CALL", "SHOUT",
+    "WANT", "NEED", "LIKE", "LOVE", "HATE", "FEEL", "THINK", "BELIEVE", "HOPE", "WISH", "DREAM",
+    "MAKE", "DO", "GET", "GIVE", "TAKE", "BRING", "SEND", "RECEIVE", "BUY", "SELL", "PAY", "COST",
+    "OPEN", "CLOSE", "BREAK", "FIX", "BUILD", "DESTROY", "CHANGE", "CREATE", "USE", "TRY", "HELP", "SHOW",
+    "MAN", "WOMAN", "BOY", "GIRL", "CHILD", "BABY", "FAMILY", "MOTHER", "FATHER", "PARENT", "SON", "DAUGHTER", "BROTHER", "SISTER", "FRIEND", "PERSON", "PEOPLE",
+    "HOME", "HOUSE", "ROOM", "DOOR", "WINDOW", "TABLE", "CHAIR", "BED", "KITCHEN", "BATHROOM", "CITY", "TOWN", "COUNTRY", "WORLD", "PLACE", "STREET", "ROAD", "SCHOOL", "WORK", "OFFICE", "STORE", "RESTAURANT", "HOSPITAL",
+    "FOOD", "WATER", "MILK", "COFFEE", "TEA", "BREAD", "MEAT", "FISH", "FRUIT", "VEGETABLE", "EGG", "CHEESE", "RICE", "SOUP",
+    "CAR", "BUS", "TRAIN", "PLANE", "BIKE", "BOAT", "PHONE", "COMPUTER", "BOOK", "PEN", "PAPER", "MONEY", "BAG", "KEY", "CLOTHES", "SHIRT", "PANTS", "SHOES",
+    "DOG", "CAT", "BIRD", "HORSE", "COW", "ANIMAL",
+    "RED", "BLUE", "GREEN", "YELLOW", "BLACK", "WHITE", "BROWN", "ORANGE", "PURPLE", "PINK", "GRAY",
+    "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "HUNDRED", "THOUSAND", "MILLION", "FIRST", "SECOND", "THIRD", "LAST",
+    "UP", "DOWN", "LEFT", "RIGHT", "IN", "OUT", "ON", "OFF", "OVER", "UNDER", "NEAR", "FAR", "HERE", "THERE", "INSIDE", "OUTSIDE",
+    "HELLO", "GOODBYE", "PLEASE", "THANK-YOU", "SORRY", "EXCUSE-ME", "WELCOME", "OKAY",
+    "NAME", "AGE", "JOB", "LIFE", "DEATH", "BIRTH", "HEALTH", "MIND", "BODY", "HEAD", "FACE", "EYE", "EAR", "NOSE", "MOUTH", "HAND", "FOOT", "HEART",
+    "MUSIC", "SONG", "MOVIE", "GAME", "SPORT", "NEWS", "STORY", "QUESTION", "PROBLEM", "IDEA", "PLAN", "WAY", "REASON",
+    "SUN", "MOON", "STAR", "SKY", "RAIN", "SNOW", "WIND", "FIRE", "TREE", "FLOWER", "MOUNTAIN", "OCEAN", "RIVER"
+  ]
+}

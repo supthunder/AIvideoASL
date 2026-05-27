@@ -3,11 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "manifest": "node scripts/gen-clips-manifest.mjs",
+    "predev": "node scripts/gen-clips-manifest.mjs",
+    "prebuild": "node scripts/gen-clips-manifest.mjs",
+    "pretypecheck": "node scripts/gen-clips-manifest.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "coverage": "node scripts/coverage.mjs",
+    "fetch:placeholders": "node scripts/fetch-clips.mjs",
+    "fetch:wlasl": "node scripts/fetch-clips.mjs --mode wlasl",
+    "test:gloss": "node scripts/test-gloss.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.0.0",
