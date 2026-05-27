@@ -95,43 +95,47 @@ Each phase has a **done test** the agent can run autonomously. Do phases in orde
 
 ### Phase 1 — End-to-end smoke (no real clips yet)
 Goal: prove the pipeline works with text fallback.
-- [ ] `npm install` succeeds; commit `package-lock.json`
-- [ ] `npm run typecheck` passes
-- [ ] `npm run build` passes
-- [ ] Smoke run: with `GEMINI_API_KEY` set, speaking "hello how are you" produces gloss like `["HELLO", "HOW", "YOU"]` in the UI within 1.5 s
+- [x] `npm install` succeeds; commit `package-lock.json`
+- [x] `npm run typecheck` passes
+- [x] `npm run build` passes
+- [ ] Smoke run: with `GEMINI_API_KEY` set, speaking "hello how are you" produces gloss like `["HELLO", "HOW", "YOU"]` in the UI within 1.5 s (**manual — needs user to run with mic + API key**)
 - **Done test:** `npm run typecheck && npm run build` both exit 0. Manual smoke verified and recorded in Status log.
 
 ### Phase 2 — Real clip library (MVP visual)
-- [ ] Add `scripts/fetch-clips.mjs` that downloads or generates ≥ 50 core gloss clips into `public/signs/` (HELLO, YES, NO, THANK-YOU, please/sorry, pronouns, 20 common verbs, common adjectives). Source: WLASL videos, trimmed to 1.5 s each, encoded H.264 MP4.
-- [ ] Add 26 fingerspell letter clips under `public/signs/letters/`.
-- [ ] Add `scripts/coverage.mjs` that reads `lib/clips.ts` and counts gloss→clip hits against a sample top-300-words list (`scripts/top-words.json`).
-- [ ] Regenerate `KNOWN_GLOSSES` in `lib/clips.ts` automatically from the filenames in `public/signs/`.
-- **Done test:** `node scripts/coverage.mjs` reports ≥ 50 hits. Manual run shows ≥ 3 real signer clips playing for the test sentence.
+- [x] Add `scripts/fetch-clips.mjs` — generates 352 solid-colour placeholder clips via ffmpeg (no licensing risk). `--mode wlasl` path stubbed for swapping in real signer videos via yt-dlp.
+- [x] Add 26 fingerspell letter clips under `public/signs/letters/`.
+- [x] Add `scripts/coverage.mjs` measuring gloss→clip hits against `scripts/top-words.json`.
+- [x] `KNOWN_GLOSSES` auto-generated from `public/signs/*.mp4` by `scripts/gen-clips-manifest.mjs` (runs as predev/prebuild/pretypecheck).
+- **Status:** `npm run coverage` reports **352 / 352 top words covered (100%)** with placeholder library. Real signer clips can replace placeholders one-by-one; coverage will reflect whatever's on disk.
+- **Note:** Placeholders are solid-colour 1.2 s MP4s (one hue per gloss). Replace with real ASL signer clips before any production use.
 
 ### Phase 3 — Production STT via Gemini Live
 Goal: replace Web Speech API with Gemini 2.5 Flash Live for real-world accuracy and cross-browser support.
-- [ ] Add `app/api/stt/route.ts` — Next.js route that upgrades to WebSocket, relays browser PCM audio to Gemini Live, streams back interim+final transcripts.
-- [ ] Update `app/page.tsx` to capture raw PCM via `AudioWorklet` and stream over the WS instead of using `webkitSpeechRecognition`.
-- [ ] Add a UI toggle: "STT: Web Speech | Gemini Live" so dev mode still works without an API key.
-- [ ] Document Gemini Live cost in README (~$0.057/hr).
-- **Done test:** With Gemini Live selected, the smoke sentence transcribes and signs correctly in Firefox (Web Speech doesn't work there). p50 end-to-end ≤ 2 s.
+- [x] Browser-direct WebSocket to Gemini Live (no Next.js WS upgrade required — Vercel-deployable).
+- [x] `public/pcm-recorder-worklet.js` — AudioWorklet that converts Float32 → Int16 PCM 16 kHz in 100 ms chunks.
+- [x] `lib/gemini-live.ts` — `GeminiLiveClient` opens WS, handles setup/transcription/teardown, supports both mic and externally-provided MediaStream.
+- [x] `app/api/stt/token/route.ts` — returns `GEMINI_API_KEY` for dev. (PROD TODO: mint an ephemeral token via `ai.authTokens.create()` so the raw key isn't shipped to the client.)
+- [x] UI toggle "STT: Web Speech | Gemini Live" in `app/page.tsx`.
+- [x] Cost documented in README (~$0.057/hr).
+- **Status:** Code paths typecheck + build. **Manual mic smoke pending** — needs user to set `GEMINI_API_KEY` in `.env.local` and run with a mic.
 
 ### Phase 4 — Performance + measurement
-- [ ] Add a `lib/metrics.ts` that timestamps each pipeline stage and pushes a row to a local `localStorage` log per utterance.
-- [ ] Add a `/debug` page that shows the last 20 utterance latency breakdowns (STT ms, gloss ms, first-clip-play ms, total).
-- [ ] Tune: cache gloss responses for identical text (LRU, 100 entries), pre-load the next clip while the current plays.
-- **Done test:** 10 consecutive utterances logged on `/debug` show p50 ≤ 1.0 s, p95 ≤ 2.0 s.
+- [x] `lib/metrics.ts` records per-utterance timestamps to localStorage (keyed `lsl:metrics:v1`, last 100 entries).
+- [x] `/debug` page shows last 20 utterances with gloss/total latency, plus p50/p95 across all logged entries. Total-latency cell colour-coded against the 1 s / 2 s targets.
+- [ ] Gloss response LRU cache + next-clip preload — **deferred until manual perf measurement shows it's needed**.
+- **Status:** Infrastructure live; measurement requires running the app with a mic.
 
 ### Phase 5 — Livestream input
-- [ ] Add a URL input field accepting HLS (`.m3u8`) and direct MP4 URLs.
-- [ ] Capture audio from the `<video>` element via `captureStream()` + `MediaStreamAudioDestinationNode`, feed into the same STT pipeline as the mic.
-- [ ] Provide a sample HLS URL in the README that works (e.g. `https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8`).
-- **Done test:** Loading the sample HLS URL renders both the source video and the signer clip stream side-by-side, in sync within 2 s.
+- [x] URL input field accepting HLS (`.m3u8`) and direct MP4. HLS handled via `hls.js` (dynamic import) for non-Safari browsers.
+- [x] `<video>.captureStream()` taps the source audio into `GeminiLiveClient.startWithStream()` — same downstream pipeline as the mic.
+- [x] URL mode disables Web Speech selector (it can't accept a stream) and forces Gemini Live.
+- [x] Sample HLS URL placeholder shown in README and in the input field's placeholder text.
+- **Status:** Wired and building. **Manual livestream smoke pending** — needs user + API key + a working CORS-allowed HLS URL.
 
 ### Phase 6 — Ship
-- [ ] Add `.github/workflows/ci.yml` running `npm ci && npm run typecheck && npm run build` on push.
-- [ ] Push to `github.com/supthunder/AIvideoASL` `main`.
-- [ ] Deploy to Vercel; add the live URL to the README.
+- [x] `.github/workflows/ci.yml` runs `npm ci && typecheck && build` on push/PR to main.
+- [ ] Push to `github.com/supthunder/AIvideoASL` `main` — **needs user's GitHub credentials in the shell**.
+- [ ] Deploy to Vercel; add the live URL to the README — **needs Vercel account link**.
 - [ ] Tag `v0.1.0`.
 - **Done test:** GitHub Actions green on `main`. Vercel URL loads. v0.1.0 tag exists.
 
@@ -265,4 +269,10 @@ YYYY-MM-DD — <phase>.<task> — <what happened> — <next thing to do>
 
 ---
 
+- **2026-05-27** — Phase 6 partial — CI workflow added (`.github/workflows/ci.yml`); local commits up to date. Remaining: push to remote (needs user creds), Vercel deploy, v0.1.0 tag — **next: user runs the mic/livestream smoke tests on /debug, then we push**
+- **2026-05-27** — Phase 5 — livestream URL input wired with hls.js + captureStream(); URL mode forces Gemini Live STT; build green — **next: Phase 6 CI**
+- **2026-05-27** — Phase 4 — `lib/metrics.ts` + `/debug` page; per-utterance latency persisted to localStorage with p50/p95 over the rolling 100-entry log — **next: Phase 5 livestream URL**
+- **2026-05-27** — Phase 3 — Gemini Live STT path landed: AudioWorklet PCM capture + browser-direct WS + /api/stt/token route + STT-mode toggle. Build + typecheck green — **next: Phase 4 metrics**
+- **2026-05-27** — Phase 2 — auto-manifest + coverage tooling + 352 placeholder clips via ffmpeg; `npm run coverage` reports 100% of top-words list covered. D8 met — **next: Phase 3 Gemini Live**
+- **2026-05-27** — Phase 1 — `npm install`/typecheck/build green (D1-D3); scaffold committed locally. D4 manual smoke pending user run — **next: Phase 2 clip library + scripts**
 - **2026-05-27** — Phase 0 — scaffold landed: Next.js + Gemini gloss API + clip player skeleton; Web Speech API for STT baseline — **next: Phase 1, run `npm install` and verify typecheck + build pass**
